@@ -10,15 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.todov1app.databinding.ActivityMainBinding;
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.showItem:
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     Task tTask = tasks.get(currentPosition);
-                    String tMsg = "Name: " + tTask.getName() + "\n" + "Description: " + tTask.getDescription();
+                    String tMsg = "Name: " + tTask.getName() + "\n" + "Description: " + tTask.getDescription() + "\n" + "Priority: " + tTask.getPriority();
                     builder.setTitle("Task details");
                     builder.setMessage(tMsg);
                     builder.setPositiveButton("OK", null);
@@ -145,6 +142,15 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.toEndItem:
                     tTask = tasks.remove(currentPosition);
                     tasks.add(tTask);
+                    taskRecyclerViewAdapter.notifyDataSetChanged();
+                    mode.finish();	//encerra o action mode
+                    return true;
+
+                case R.id.prioritizeTask:
+                    tTask = tasks.get(currentPosition);
+                    if (!tTask.updatePriority()) {
+                        Toast.makeText(MainActivity.this, "Already high priority", Toast.LENGTH_SHORT).show();
+                    }
                     taskRecyclerViewAdapter.notifyDataSetChanged();
                     mode.finish();	//encerra o action mode
                     return true;
